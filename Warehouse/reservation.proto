@@ -1,0 +1,32 @@
+syntax = "proto3";
+package reservation.v1;
+option go_package = "reservation-service/pkg/gen;pb";
+option csharp_namespace = "Reservation.V1";
+
+service ReservationService {
+  rpc CreateReservation(CreateReservationRequest) returns (Reservation) {
+  }
+  rpc GetReservation(ReservationRequest) returns (Reservation) {
+  }
+  rpc ConfirmReservation(ReservationRequest) returns (Reservation) {
+  }
+  rpc CancelReservation(ReservationRequest) returns (Reservation) {
+  }
+}
+message CreateReservationRequest {
+  string reservation_id = 1;
+  string product_id = 2;
+  string customer_id = 3;
+  int32 quantity = 4;
+  int32 expiration_minutes = 5;
+}
+message ReservationRequest {
+  string reservation_id = 1;
+}
+message Reservation {
+  string reservation_id = 1;
+  string product_id = 2;
+  string customer_id = 3;
+  int32 quantity = 4;
+  string status = 5;
+}
