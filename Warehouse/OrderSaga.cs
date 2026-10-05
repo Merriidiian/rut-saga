@@ -22,12 +22,18 @@ public class OrderSaga(OrderRepository repository,
             logger.LogInformation("SAGA {Id} OrderCreated saved", id);
             await client.CreateReservationAsync(new CreateReservationRequest
             {
-                ReservationId = reservationId, ProductId = command.ProductId.ToString(),
-                CustomerId = command.CustomerId.ToString(), Quantity = command.Quantity,
+                ReservationId = reservationId,
+                ProductId = command.ProductId.ToString(),
+                CustomerId = command.CustomerId.ToString(),
+                Quantity = command.Quantity,
                 ExpirationMinutes = 30
             }, deadline: DateTime.UtcNow.AddSeconds(5), cancellationToken: ct);
             logger.LogInformation("SAGA {Id} Reservation created", id);
-            if (command.FailAfterReservation) throw new InvalidOperationException("Test failure after reservation");
+            if (command.FailAfterReservation)
+            {
+                throw new InvalidOperationException("Test failure after reservation");
+            }
+
             await client.ConfirmReservationAsync(new ReservationRequest { ReservationId = reservationId },
                 deadline: DateTime.UtcNow.AddSeconds(5), cancellationToken: ct);
             order.Confirm(reservationId);
